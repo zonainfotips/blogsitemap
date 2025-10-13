@@ -4,11 +4,12 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="google-site-verification" content="DXrqx2NPtZ0csjXB5KqSSGqcPGomG_fGD5tgDXT4zB8">
-  <title>Sitemap Aktif – Zona Info Tips</title>
-  <meta name="description" content="Daftar artikel blog Zona Info Tips dari widodokapuk.blogspot.com yang membahas fenomena alam, hewan unik, dan penemuan besar.">
+  <title>Sitemap Otomatis per Kategori – Zona Info Tips</title>
+  <meta name="description" content="Sitemap otomatis per kategori dari blog Zona Info Tips. Semua artikel terbaru dari widodokapuk.blogspot.com.">
   <style>
     body { font-family: Arial, sans-serif; background:#fafafa; color:#333; margin:40px; line-height:1.8; }
     h1 { color:#0055a5; border-bottom:2px solid #ccc; padding-bottom:10px; }
+    h2 { color:#0073e6; margin-top:30px; }
     ul { list-style: disc; margin-left: 20px; }
     a { color:#0066cc; text-decoration:none; }
     a:hover { text-decoration:underline; }
@@ -16,29 +17,61 @@
   </style>
 </head>
 <body>
-  <h1>Sitemap Aktif – Zona Info Tips</h1>
-  <p>Berikut daftar artikel dari blog <a href="https://widodokapuk.blogspot.com" target="_blank">Zona Info Tips</a> yang bisa dirayapi Google:</p>
+  <h1>Sitemap Otomatis per Kategori – Zona Info Tips</h1>
+  <p>Daftar artikel otomatis berdasarkan kategori dari blog <a href="https://widodokapuk.blogspot.com" target="_blank">Zona Info Tips</a>:</p>
 
-  <ul>
-    <li><a href="https://widodokapuk.blogspot.com/2025/09/fenomena-bentuk-awan-langka-yang-pernah.html" target="_blank">Fenomena Awan Langka yang Pernah Terjadi di Dunia</a></li>
-    <li><a href="https://widodokapuk.blogspot.com/2025/09/semut-peluru-gigitan-serangga-paling.html" target="_blank">Semut Peluru dan Gigitan Paling Menyakitkan di Dunia Hewan</a></li>
-    <li><a href="https://widodokapuk.blogspot.com/2025/09/7-kota-tersepi-di-dunia-dari-craco.html" target="_blank">Kota Tersepi di Dunia yang Ditinggalkan Warganya</a></li>
-    <li><a href="https://widodokapuk.blogspot.com/2025/09/ini-dia-hewan-unik-berkekuatan-listrik.html" target="_blank">Belut Listrik dan Rahasia Tegangan Tingginya</a></li>
-    <li><a href="https://widodokapuk.blogspot.com/2025/09/7-penemuan-besar-yang-menggemparkan.html" target="_blank">Penemuan Besar yang Mengubah Dunia dan Sejarah</a></li>
-<li><a href="https://widodokapuk.blogspot.com/2025/10/5-tokoh-ekstrem-dengan-modifikasi-tubuh.html" target="_blank">modifikasi tubuh tersekstrim</a></li>
-<li><a href="https://widodokapuk.blogspot.com/2025/09/7-objek-wisata-indonesia-yang-dulu.html" target="_blank">objek wisata yang dulu ramai kini terbengkalai</a></li>
-<li><a href="https://widodokapuk.blogspot.com/2025/09/orang-unik-di-dunia-dengan-kebiasaan.html" target="_blank">beberapa orang dengan kebiasaan unik di dunia</a></li>
-<li><a href="https://widodokapuk.blogspot.com/2025/09/fakta-unik-di-dunia.html" target="_blank">beberapa fakta unik yang ada di dunia</a></li>
-<li><a href="https://widodokapuk.blogspot.com/2025/09/misteri-penemuan-arkeologi-langka-yang.html" target="_blank">misteri penemuan arkeologi yang masih misteri </a></li>
-<li><a href="https://widodokapuk.blogspot.com/2025/09/tradisi-unik-di-dunia-indonesia-yang.html" target="_blank">tradisi unik di berbagai dunia</a></li>
-<li><a href="https://widodokapuk.blogspot.com/2025/09/angin-tornado-terbesar-dan-terparah-di.html" target="_blank">fenomena angin tornado terbesar di dunia</a></li>
-<li><a href="https://widodokapuk.blogspot.com/2025/09/kendaraan-canggih-di-luar-nalar-inovasi.html" target="_blank">kendaraan canggih di luar nalar</a></li>
-  <li><a href="https://widodokapuk.blogspot.com/2025/09/7-tempat-anti-gravitasi-di-dunia-yang.html" target="_blank">tempat anti gravitasi di dunia</a></li>
-<li><a href="https://widodokapuk.blogspot.com/2025/09/para-aktor-yang-meninggal-saat-syuting.html" target="_blank">tokoh film yang tewas di lokasi syuting</a></li>
-  </ul>
+  <div id="sitemap">Memuat data artikel...</div>
 
   <footer>
-    <p>© 2025 Zona Info Tips | Sumber utama: <a href="https://widodokapuk.blogspot.com" target="_blank">Blogspot</a></p>
+    <p>© 2025 Zona Info Tips | Sumber: <a href="https://widodokapuk.blogspot.com" target="_blank">widodokapuk.blogspot.com</a></p>
   </footer>
+
+  <script>
+    async function loadSitemap() {
+      const sitemapDiv = document.getElementById("sitemap");
+      sitemapDiv.innerHTML = "<p>Sedang memuat artikel...</p>";
+
+      try {
+        const res = await fetch("https://widodokapuk.blogspot.com/feeds/posts/default?alt=json&max-results=500");
+        const data = await res.json();
+        const entries = data.feed.entry || [];
+        const categories = {};
+
+        // Pisahkan artikel berdasarkan label (kategori)
+        entries.forEach(entry => {
+          const title = entry.title.$t;
+          const link = entry.link.find(l => l.rel === "alternate").href;
+          const labels = entry.category ? entry.category.map(c => c.term) : ["Tanpa Kategori"];
+
+          labels.forEach(label => {
+            if (!categories[label]) categories[label] = [];
+            categories[label].push({ title, link });
+          });
+        });
+
+        sitemapDiv.innerHTML = "";
+
+        // Tampilkan setiap kategori dengan daftar artikelnya
+        Object.keys(categories).sort().forEach(label => {
+          const h2 = document.createElement("h2");
+          h2.textContent = label;
+          sitemapDiv.appendChild(h2);
+
+          const ul = document.createElement("ul");
+          categories[label].forEach(post => {
+            const li = document.createElement("li");
+            li.innerHTML = `<a href="${post.link}" target="_blank">${post.title}</a>`;
+            ul.appendChild(li);
+          });
+          sitemapDiv.appendChild(ul);
+        });
+
+      } catch (error) {
+        sitemapDiv.innerHTML = "<p>❌ Gagal memuat feed. Coba periksa koneksi atau buka langsung di <a href='https://widodokapuk.blogspot.com'>blog</a>.</p>";
+      }
+    }
+
+    loadSitemap();
+  </script>
 </body>
-  </html>
+</html>
