@@ -4,12 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="google-site-verification" content="DXrqx2NPtZ0csjXB5KqSSGqcPGomG_fGD5tgDXT4zB8">
-  <title>Sitemap Otomatis per Kategori – Zona Info Tips</title>
-  <meta name="description" content="Sitemap otomatis per kategori dari blog Zona Info Tips. Semua artikel terbaru dari widodokapuk.blogspot.com.">
+  <title>Sitemap Otomatis – Zona Info Tips</title>
+  <meta name="description" content="Sitemap otomatis dari blog Zona Info Tips. Menampilkan semua artikel dari widodokapuk.blogspot.com secara real-time.">
   <style>
     body { font-family: Arial, sans-serif; background:#fafafa; color:#333; margin:40px; line-height:1.8; }
     h1 { color:#0055a5; border-bottom:2px solid #ccc; padding-bottom:10px; }
-    h2 { color:#0073e6; margin-top:30px; }
     ul { list-style: disc; margin-left: 20px; }
     a { color:#0066cc; text-decoration:none; }
     a:hover { text-decoration:underline; }
@@ -17,61 +16,35 @@
   </style>
 </head>
 <body>
-  <h1>Sitemap Otomatis per Kategori – Zona Info Tips</h1>
-  <p>Daftar artikel otomatis berdasarkan kategori dari blog <a href="https://widodokapuk.blogspot.com" target="_blank">Zona Info Tips</a>:</p>
+  <h1>Sitemap Otomatis – Zona Info Tips</h1>
+  <p>Daftar artikel otomatis dari blog <a href="https://widodokapuk.blogspot.com" target="_blank">Zona Info Tips</a>:</p>
 
-  <div id="sitemap">Memuat data artikel...</div>
+  <ul id="postList">Memuat daftar artikel...</ul>
 
   <footer>
     <p>© 2025 Zona Info Tips | Sumber: <a href="https://widodokapuk.blogspot.com" target="_blank">widodokapuk.blogspot.com</a></p>
   </footer>
 
   <script>
-    async function loadSitemap() {
-      const sitemapDiv = document.getElementById("sitemap");
-      sitemapDiv.innerHTML = "<p>Sedang memuat artikel...</p>";
-
+    async function loadFeed() {
       try {
-        const res = await fetch("https://widodokapuk.blogspot.com/feeds/posts/default?alt=json&max-results=500");
-        const data = await res.json();
-        const entries = data.feed.entry || [];
-        const categories = {};
-
-        // Pisahkan artikel berdasarkan label (kategori)
-        entries.forEach(entry => {
-          const title = entry.title.$t;
-          const link = entry.link.find(l => l.rel === "alternate").href;
-          const labels = entry.category ? entry.category.map(c => c.term) : ["Tanpa Kategori"];
-
-          labels.forEach(label => {
-            if (!categories[label]) categories[label] = [];
-            categories[label].push({ title, link });
-          });
+        const response = await fetch("https://widodokapuk.blogspot.com/feeds/posts/default?alt=json&max-results=500");
+        const data = await response.json();
+        const posts = data.feed.entry || [];
+        const list = document.getElementById("postList");
+        list.innerHTML = "";
+        posts.forEach(post => {
+          const title = post.title.$t;
+          const link = post.link.find(l => l.rel === "alternate").href;
+          const li = document.createElement("li");
+          li.innerHTML = `<a href="${link}" target="_blank">${title}</a>`;
+          list.appendChild(li);
         });
-
-        sitemapDiv.innerHTML = "";
-
-        // Tampilkan setiap kategori dengan daftar artikelnya
-        Object.keys(categories).sort().forEach(label => {
-          const h2 = document.createElement("h2");
-          h2.textContent = label;
-          sitemapDiv.appendChild(h2);
-
-          const ul = document.createElement("ul");
-          categories[label].forEach(post => {
-            const li = document.createElement("li");
-            li.innerHTML = `<a href="${post.link}" target="_blank">${post.title}</a>`;
-            ul.appendChild(li);
-          });
-          sitemapDiv.appendChild(ul);
-        });
-
       } catch (error) {
-        sitemapDiv.innerHTML = "<p>❌ Gagal memuat feed. Coba periksa koneksi atau buka langsung di <a href='https://widodokapuk.blogspot.com'>blog</a>.</p>";
+        document.getElementById("postList").innerHTML = "<li>Gagal memuat feed. Coba buka langsung di <a href='https://widodokapuk.blogspot.com'>blog</a>.</li>";
       }
     }
-
-    loadSitemap();
+    loadFeed();
   </script>
 </body>
 </html>
