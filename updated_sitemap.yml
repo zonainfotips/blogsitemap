@@ -2,8 +2,8 @@ name: Auto Update Master Sitemap
 
 on:
   schedule:
-    - cron: '0 3 * * *'   # Update otomatis setiap hari jam 03:00 UTC
-  workflow_dispatch:       # Bisa dijalankan manual dari tab Actions
+    - cron: '0 3 * * *'
+  workflow_dispatch:
 
 jobs:
   update-sitemap:
