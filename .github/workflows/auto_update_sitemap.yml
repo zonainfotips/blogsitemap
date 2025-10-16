@@ -1,0 +1,37 @@
+name: Auto Update Master Sitemap
+
+on:
+  schedule:
+    - cron: '0 3 * * *'   # Jalan otomatis setiap hari jam 03:00 UTC (10:00 WIB)
+  workflow_dispatch:       # Bisa dijalankan manual lewat tab Actions
+
+jobs:
+  update_sitemap:
+    name: Generate and Update Sitemap
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Generate Sitemap
+        run: python generate_sitemap.py
+
+      - name: Commit and Push Changes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config --global user.name "Sitemap Bot"
+          git config --global user.email "actions@github.com"
+          git add mastersitemap.xml
+          git commit -m "🤖 Auto-update sitemap $(date -u)" || echo "No changes"
+          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
+          git push origin HEAD:${{ github.ref }}
