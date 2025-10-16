@@ -2,11 +2,12 @@ name: Auto Update Master Sitemap
 
 on:
   schedule:
-    - cron: '0 3 * * *'   # Jalan otomatis setiap hari jam 03:00 UTC (10:00 WIB)
+    - cron: '0 3 * * *'   # Jalan otomatis tiap hari jam 03:00 UTC (10:00 WIB)
   workflow_dispatch:       # Bisa dijalankan manual lewat tab Actions
 
 jobs:
-  build:
+  update_sitemap:
+    name: Generate and Update Sitemap
     runs-on: ubuntu-latest
 
     steps:
